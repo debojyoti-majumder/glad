@@ -4,7 +4,13 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"debojyoti.majumder/glad/server"
 )
+
+func ClientDataPayload() {
+	fmt.Println("Creating finite number of random client request")
+}
 
 func main() {
 	// Defining the commands
@@ -24,11 +30,12 @@ func main() {
 	switch command {
 	case "server":
 		serverCmd.Parse(os.Args[2:])
-		fmt.Println("Running in server mode on", *serverPort)
+		server.StartServer(*serverPort)
 
 	case "client":
 		clientCmd.Parse(os.Args[2:])
 		fmt.Println("Running on client mode", *remoteSystem)
+		ClientDataPayload()
 
 	default:
 		fmt.Println("Show usage")
