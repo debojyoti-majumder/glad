@@ -14,6 +14,10 @@ func (cmd *AddNodeToClusterCommand) SetId(v int) {
 	cmd.id = v
 }
 
+func (cmd AddNodeToClusterCommand) Serialize() []byte {
+	return nil
+}
+
 // Implements GladCommand interface
 type RemoveNodeToClusterCommand struct {
 	id int
@@ -25,4 +29,8 @@ func (cmd RemoveNodeToClusterCommand) GetId() int {
 
 func (cmd *RemoveNodeToClusterCommand) SetId(v int) {
 	cmd.id = v
+}
+
+func (cmd RemoveNodeToClusterCommand) Serialize() []byte {
+	return nil
 }

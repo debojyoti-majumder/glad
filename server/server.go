@@ -10,7 +10,8 @@ func initCommands() {
 	fmt.Println("Registering commands with command manager")
 	cmdMgr := commands.NewCommandManger()
 
-	p := commands.AddNodeToClusterCommand{}
+	cmdMgr.AddCommands(&commands.AddNodeToClusterCommand{})
+	cmdMgr.AddCommands(&commands.RemoveNodeToClusterCommand{})
 }
 
 func StartServer(port int) {
