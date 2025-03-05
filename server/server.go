@@ -4,17 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
-
-	"debojyoti.majumder/glad/commands"
 )
-
-func initCommands() {
-	fmt.Println("Registering commands with command manager")
-	cmdMgr := commands.NewCommandManger()
-
-	cmdMgr.AddCommands(&commands.AddNodeToClusterCommand{})
-	cmdMgr.AddCommands(&commands.RemoveNodeToClusterCommand{})
-}
 
 func proccessLDAPClient(client net.Conn) {
 	fmt.Println("Processing client connection")
@@ -52,8 +42,6 @@ func startMangementService(port int) {
 }
 
 func StartServer(port int) {
-	initCommands()
-
 	go startMangementService(port + 1)
 	startLdapService(port)
 }

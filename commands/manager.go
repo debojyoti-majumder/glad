@@ -4,7 +4,10 @@ type GladCommand interface {
 	GetId() int
 	SetId(int)
 
-	Serialize() []byte
+	// This is used for mapping commands from the command line
+	// arguments
+	GetCommandName() string
+	ProcessCommand(params []string)
 }
 
 /*
@@ -30,4 +33,15 @@ func (cmdManeger *CommandManager) AddCommands(newCmd GladCommand) {
 
 	newCmd.SetId(cmdManeger.commandCounter)
 	cmdManeger.commandList = append(cmdManeger.commandList, newCmd)
+}
+
+func (cmdManager CommandManager) ProcessCommand(userCommand []string) {
+	command := userCommand[0]
+
+	for _, gladCommand := range cmdManager.commandList {
+		if gladCommand.GetCommandName() == command {
+			gladCommand.ProcessCommand(userCommand[1:])
+			break
+		}
+	}
 }
