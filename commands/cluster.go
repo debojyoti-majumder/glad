@@ -1,48 +1,64 @@
 package commands
 
-import "fmt"
+import (
+	"fmt"
+	"net"
+)
 
 // Implements GladCommand interface
 type AddNodeToClusterCommand struct {
-	id          int
+	Id          int
 	NodeAddress string
 }
 
 func (cmd AddNodeToClusterCommand) GetId() int {
-	return cmd.id
+	return cmd.Id
 }
 
 func (cmd *AddNodeToClusterCommand) SetId(v int) {
-	cmd.id = v
+	cmd.Id = v
 }
 
 func (cmd AddNodeToClusterCommand) GetCommandName() string {
 	return "add-node"
 }
 
-func (cmd AddNodeToClusterCommand) ProcessCommand(params []string) {
-	fmt.Println("Adding node to the cluster")
-	fmt.Println(params)
+func (cmd AddNodeToClusterCommand) ParseParams(params []string) (GladCommand, error) {
+	// Parsing the user input
+	inp := params[0]
+	_, err := net.ResolveTCPAddr("tcp", inp)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return &AddNodeToClusterCommand{Id: cmd.Id, NodeAddress: inp}, nil
 }
 
 // Implements GladCommand interface
 type RemoveNodeToClusterCommand struct {
-	id int
+	Id          int
+	NodeAddress string
 }
 
 func (cmd RemoveNodeToClusterCommand) GetId() int {
-	return cmd.id
+	return cmd.Id
 }
 
 func (cmd *RemoveNodeToClusterCommand) SetId(v int) {
-	cmd.id = v
+	cmd.Id = v
 }
 
 func (cmd RemoveNodeToClusterCommand) GetCommandName() string {
 	return "remove-node"
 }
 
-func (cmd RemoveNodeToClusterCommand) ProcessCommand(params []string) {
-	fmt.Println("Removing node from the cluster")
-	fmt.Println(params)
+func (cmd RemoveNodeToClusterCommand) ParseParams(params []string) (GladCommand, error) {
+	// Parsing the user input
+	inp := params[0]
+	_, err := net.ResolveTCPAddr("tcp", inp)
+	if err != nil {
+		return &cmd, err
+	}
+
+	return &RemoveNodeToClusterCommand{Id: cmd.Id, NodeAddress: inp}, nil
 }

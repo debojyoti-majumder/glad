@@ -1,5 +1,10 @@
 package commands
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 type GladCommand interface {
 	GetId() int
 	SetId(int)
@@ -7,7 +12,7 @@ type GladCommand interface {
 	// This is used for mapping commands from the command line
 	// arguments
 	GetCommandName() string
-	ProcessCommand(params []string)
+	ParseParams(params []string) (GladCommand, error)
 }
 
 /*
@@ -40,8 +45,23 @@ func (cmdManager CommandManager) ProcessCommand(userCommand []string) {
 
 	for _, gladCommand := range cmdManager.commandList {
 		if gladCommand.GetCommandName() == command {
-			gladCommand.ProcessCommand(userCommand[1:])
+			parsedCommand, err := gladCommand.ParseParams(userCommand[1:])
+
+			// Sending the to remote target given there no parsing error
+			if err == nil {
+				sendCommand(parsedCommand)
+			}
+
 			break
 		}
 	}
+}
+
+func sendCommand(cmd GladCommand) {
+	obj, err := json.Marshal(cmd)
+
+	if err == nil {
+		fmt.Println(string(obj))
+	}
+
 }
