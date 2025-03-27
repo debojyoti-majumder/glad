@@ -7,7 +7,7 @@ import (
 )
 
 func proccessLDAPClient(client net.Conn) {
-	fmt.Println("Processing client connection")
+	fmt.Println("Processing LDAP Request")
 	client.Close()
 }
 

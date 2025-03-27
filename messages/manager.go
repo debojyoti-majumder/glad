@@ -63,5 +63,4 @@ func sendCommand(cmd GladCommand) {
 	if err == nil {
 		fmt.Println(string(obj))
 	}
-
 }

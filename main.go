@@ -5,20 +5,20 @@ import (
 	"fmt"
 	"os"
 
-	"debojyoti.majumder/glad/commands"
+	messages "debojyoti.majumder/glad/messages"
 	"debojyoti.majumder/glad/server"
 )
 
-func processClientCommand(target string, cmdMgr commands.CommandManager, args []string) {
+func processClientCommand(target string, cmdMgr messages.CommandManager, args []string) {
 	fmt.Printf("Should be sending it to %s\n", target)
 	cmdMgr.ProcessCommand(args)
 }
 
 func main() {
 	// The command hanlers are needed both for server and client operations
-	commandManager := commands.NewCommandManger()
-	commandManager.AddCommands(&commands.AddNodeToClusterCommand{})
-	commandManager.AddCommands(&commands.RemoveNodeToClusterCommand{})
+	commandManager := messages.NewCommandManger()
+	commandManager.AddCommands(&messages.AddNodeToClusterMessage{})
+	commandManager.AddCommands(&messages.RemoveNodeToClusterMessage{})
 
 	// Defining the commands
 	serverCmd := flag.NewFlagSet("server", flag.ExitOnError)
