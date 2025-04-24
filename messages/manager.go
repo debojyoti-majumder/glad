@@ -2,7 +2,8 @@ package commands
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
+	"net"
 )
 
 type GladCommand interface {
@@ -40,7 +41,7 @@ func (cmdManeger *CommandManager) AddCommands(newCmd GladCommand) {
 	cmdManeger.commandList = append(cmdManeger.commandList, newCmd)
 }
 
-func (cmdManager CommandManager) ProcessCommand(userCommand []string) {
+func (cmdManager CommandManager) ProcessCommand(target string, userCommand []string) {
 	command := userCommand[0]
 
 	for _, gladCommand := range cmdManager.commandList {
@@ -49,7 +50,7 @@ func (cmdManager CommandManager) ProcessCommand(userCommand []string) {
 
 			// Sending the to remote target given there no parsing error
 			if err == nil {
-				sendCommand(parsedCommand)
+				sendCommand(parsedCommand, target)
 			}
 
 			break
@@ -57,10 +58,19 @@ func (cmdManager CommandManager) ProcessCommand(userCommand []string) {
 	}
 }
 
-func sendCommand(cmd GladCommand) {
+func sendCommand(cmd GladCommand, target string) {
+	// Connecting to the remote
+	remote, err := net.Dial("tcp", target)
+	if err != nil {
+		log.Printf("%s", err.Error())
+		return
+	}
+	defer remote.Close()
+
 	obj, err := json.Marshal(cmd)
 
+	// Sending the data to the server
 	if err == nil {
-		fmt.Println(string(obj))
+		remote.Write(obj)
 	}
 }

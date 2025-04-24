@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	messages "debojyoti.majumder/glad/messages"
@@ -10,8 +11,12 @@ import (
 )
 
 func processClientCommand(target string, cmdMgr messages.CommandManager, args []string) {
-	fmt.Printf("Should be sending it to %s\n", target)
-	cmdMgr.ProcessCommand(args)
+	log.Printf("Sending command to %s\n", target)
+
+	// Process only if there are other parameters are present
+	if len(args) != 0 {
+		cmdMgr.ProcessCommand(target, args)
+	}
 }
 
 func main() {
@@ -31,6 +36,9 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Setting log location as standard output location
+	log.SetOutput(os.Stdout)
+
 	command := os.Args[1]
 
 	switch command {
@@ -39,7 +47,7 @@ func main() {
 		server.StartServer(*serverPort)
 
 	case "client":
-		remoteSystem := clientCmd.String("server", "127.0.0.1:3000", "Remote address")
+		remoteSystem := clientCmd.String("server", "127.0.0.1:3001", "Remote address")
 		clientCmd.Parse(os.Args[2:])
 		commandArguments := clientCmd.Args()
 
